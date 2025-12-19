@@ -1,2 +1,17 @@
 2025-119009|Matematica Discreta II|13|
 2025-119003|Matematica Discreta II|16|
+2025-119002|Matematica Discreta II|14|
+2025-119002|Matematica Discreta II|12|
+2025-119001|Matematica Discreta II|14|
+2025-119022|Matematica Discreta II|11|
+2025-119002|Matematica Discreta II|12|
+2025-119009|Filosofia|20|
+2025-119001|Filosofia|12|
+2025-119002|Filosofia|14|
+2025-119009|Ecologia|12|
+2025-119001|Ecologia|13|
+2025-119022|Ecologia|12|
+2025-119009|Matematica I|15|
+2025-119002|Matematica I|11|
+2025-119003|Matematica I|13|
+2025-119035|Matematica I|12|

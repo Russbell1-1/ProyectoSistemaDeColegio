@@ -1,1 +1,4 @@
 Javier Hilasaca|Matematica Discreta II|hilasaca123
+Roger Sueros|Ecologia|roger123
+Karin Supo|Filosofia|karin123
+Walter Zavaleta|Matematica I|walter123

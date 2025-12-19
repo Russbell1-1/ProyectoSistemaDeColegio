@@ -2,8 +2,6 @@
 #include <windows.h>
 using namespace std;
 
-//Modificacion agregada para que la clase profesor actualice su registro de estudiantes despues de registrarse como estudiante
-
 const int MAX=1000; //Para cantidad maxima del sistema
 const int MAX_PROF=100;
 
@@ -132,7 +130,7 @@ public:
     void registrarNota();
     float promedioCurso();
     float notaMasAlta(); 
-    //void ordenarEstudiantesLista(); 
+    void ordenarEstudiantesLista(); // implementarás con quicksort
 };
 
 void Profesor::registrarNota(){
@@ -146,7 +144,6 @@ void Profesor::registrarNota(){
         cout<<i+1<<". "<<estudiantes[i]->getapellidos()<<", "<<estudiantes[i]->getnombres()<<" (Codigo: "<<estudiantes[i]->getcodigo()<<")\n";
     }
     int opcion;
-    cout<<endl;
     cout<<"Ingrese el número del estudiante: ";
     cin>>opcion;
     if(opcion<1||opcion>estudiantes.size()){
@@ -156,7 +153,7 @@ void Profesor::registrarNota(){
     float nota;
     cout<<"Ingrese la nota del estudiante: ";
     cin>>nota;
-    ofstream archivo("../reportes/Notas.txt",ios::app);
+    ofstream archivo("Notas.txt",ios::app);
     archivo<<estudiantes[opcion-1]->getcodigo()<<"|"<<materia<<"|"<<nota<<"|\n";
     archivo.close();
     cout<<"Nota registrada correctamente.\n";
@@ -164,7 +161,7 @@ void Profesor::registrarNota(){
 
 float Profesor::promedioCurso(){
     vector<float> notas; 
-    ifstream archivo("../reportes/Notas.txt");
+    ifstream archivo("Notas.txt");
     if(archivo.fail()){
         cout<<"No se pudo abrir el archivo de notas.\n";
         return 0;
@@ -196,7 +193,7 @@ float Profesor::notaMasAlta(){
     }
 
     vector<float> notasCurso;
-    ifstream archivo("../reportes/Notas.txt");
+    ifstream archivo("Notas.txt");
     string linea,codigo,curso,notaStr;
     while(getline(archivo,linea)){
         stringstream ss(linea);
@@ -249,7 +246,7 @@ bool codigoYaRegistrado(string codigo);
 
 void verNotas(Estudiante *estudiante){
     string materias[]={"Programacion Avanzada","Matematica I","Filosofia","Ecologia","Realidad Nacional","Matematica Discreta II","Fisica"};
-    ifstream archivo("../reportes/Notas.txt");
+    ifstream archivo("Notas.txt");
     string linea,codigo,curso,nota;
     map<string,string> notas;
     while(getline(archivo,linea)){
@@ -324,7 +321,6 @@ void loginestudiante(Estudiante *estudiantes[], int &n){
 				return;
 				} else {
 				cout<<"Contraseña incorrecta\n";
-				system("pause");
 				break;
 				}
 				break;	
@@ -369,7 +365,7 @@ void menuestudiante(Estudiante *estudiante){
 
 //-------------------------- CODIGOS AUXILIARES --------------------------
 bool codigoExiste(string codigo){
-	ifstream archivo("../reportes/codigos.txt");
+	ifstream archivo("codigos.txt");
 	string linea;
 	if(archivo.fail()) return false;
 	while(getline(archivo,linea)){
@@ -383,7 +379,7 @@ bool codigoExiste(string codigo){
 }
 
 bool codigoYaRegistrado(string codigo){
-	ifstream archivo("../reportes/Estudiantes.txt");
+	ifstream archivo("Estudiantes.txt");
 	string linea;
 	if(archivo.fail()) return false;
 	while(getline(archivo,linea)){
@@ -432,7 +428,7 @@ void registrarEstudiante(Estudiante *estudiantes[], int &n){
 	cout<<"Ingrese contraseña: ";
 	getline(cin,contrasenia);
 
-	ofstream archivo("../reportes/Estudiantes.txt", ios::app);
+	ofstream archivo("Estudiantes.txt", ios::app);
 	archivo<<dni<<"|"<<nombres<<"|"<<apellidos<<"|"<<codigo<<"|"<<anio<<"|"<<contrasenia<<"\n";
 	archivo.close();
 
@@ -498,14 +494,14 @@ void loginProfesor(Profesor* profesores[], int nProf, Estudiante* estudiantes[],
             }
             else break;
         }
-        cin.ignore(numeric_limits<streamsize>::max(), '\n'); 
+        cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Limpiar buffer antes de getline
 
         switch(rpta){
             case 1:{
                 system("cls");
                 string contrasenia;
                 cout<<"Ingrese su contraseña: ";
-                getline(cin, contrasenia);  
+                getline(cin, contrasenia);  // Ahora sí lee correctamente
                 bool encontrado = false;
                 int pos = 0;
                 while(pos < nProf){
@@ -561,7 +557,7 @@ void menuProfesor(Profesor* profesor, Profesor* profesores[], int nProf, Estudia
                 break;
             case 'B':
                 system("cls");
-                // Actualizamos la lista de estudiantes antes de registrar nota (modificacion)
+                // Actualizamos la lista de estudiantes antes de registrar nota
                 asignarEstudiantesAProfesores(profesores, nProf, estudiantes, nEst);
                 profesor->registrarNota(); 
                 system("pause");
@@ -589,7 +585,7 @@ void menuProfesor(Profesor* profesor, Profesor* profesores[], int nProf, Estudia
 
 //-------------------------- CARGAR DATOS --------------------------
 void cargarEstudiantes(Estudiante *estudiantes[], int &n){
-	ifstream archivo("../reportes/Estudiantes.txt");
+	ifstream archivo("Estudiantes.txt");
 	string linea;
 	if(archivo.fail()){
 		cout<<"No se pudo abrir el archivo\n";
@@ -611,7 +607,7 @@ void cargarEstudiantes(Estudiante *estudiantes[], int &n){
 }
 
 void cargarProfesores(Profesor* profesores[], int &nProf){
-    ifstream archivo("../reportes/Profesores.txt");
+    ifstream archivo("Profesores.txt");
     if(archivo.fail()){
         cout<<"No se pudo abrir el archivo de profesores\n";
         exit(1);
@@ -630,12 +626,9 @@ void cargarProfesores(Profesor* profesores[], int &nProf){
 }
 
 void asignarEstudiantesAProfesores(Profesor* profesores[], int nProf, Estudiante* estudiantes[], int nEst){
-	for(int i=0;i<nProf;i++){
-        profesores[i]->getEstudiantes().clear(); // Limpia antes de agregar
-	}
-    for(int k=0;k<nProf;k++){
+    for(int i=0;i<nProf;i++){
         for(int j=0;j<nEst;j++){
-            profesores[k]->getEstudiantes().push_back(estudiantes[j]);
+            profesores[i]->getEstudiantes().push_back(estudiantes[j]);
         }
     }
 }
@@ -658,9 +651,3 @@ int main (){
 	
 	return 0;
 }
-
-/*Datos de profesores que puede probar (contrasenias)
-Javier Hilasaca|Matematica Discreta II|hilasaca123
-Roger Sueros|Ecologia|roger123
-Karin Supo|Filosofia|karin123
-Walter Zavaleta|Matematica I|walter123*/
